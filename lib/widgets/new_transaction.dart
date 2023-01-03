@@ -1,10 +1,29 @@
 import 'package:flutter/material.dart';
 
-class NewTransaction extends StatelessWidget {
-  NewTransaction({super.key, required this.addTransaction});
-  final titleController = TextEditingController();
-  final amountController = TextEditingController();
+class NewTransaction extends StatefulWidget {
+  const NewTransaction({super.key, required this.addTransaction});
   final Function addTransaction;
+
+  @override
+  State<NewTransaction> createState() => _NewTransactionState();
+}
+
+class _NewTransactionState extends State<NewTransaction> {
+  final titleController = TextEditingController();
+
+  final amountController = TextEditingController();
+
+  void _addTx() {
+    final valueTitleController = titleController.text;
+    final valueAmountController = double.parse(amountController.text);
+    if (valueTitleController.isEmpty || valueAmountController.isNegative) {
+      return;
+    }
+    widget.addTransaction(
+      valueTitleController,
+      valueAmountController,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -17,23 +36,19 @@ class NewTransaction extends StatelessWidget {
               labelText: 'Title',
             ),
             controller: titleController,
+            keyboardType: TextInputType.text,
+            textInputAction: TextInputAction.next,
           ),
           TextField(
             decoration: const InputDecoration(
               labelText: 'Amount',
             ),
             controller: amountController,
+            keyboardType: TextInputType.number,
+            textInputAction: TextInputAction.done,
           ),
           ElevatedButton(
-            onPressed: () {
-              addTransaction(
-                titleController.text,
-                double.parse(amountController.text),
-              );
-            },
-            style: const ButtonStyle(
-              backgroundColor: MaterialStatePropertyAll(Colors.purple),
-            ),
+            onPressed: () => _addTx(),
             child: const Text('Add Transaction'),
           )
         ],
