@@ -67,12 +67,12 @@ class _MyHomePageState extends State<MyHomePage> {
         .toList();
   }
 
-  void _addTransaction(String titleTx, double amountTx) {
+  void _addTransaction(String titleTx, double amountTx, DateTime dateTx) {
     final newTx = Transaction(
       id: DateTime.now().toString(),
       title: titleTx,
       amount: amountTx,
-      date: DateTime.now(),
+      date: dateTx,
     );
 
     setState(() {
@@ -80,6 +80,14 @@ class _MyHomePageState extends State<MyHomePage> {
     });
 
     Navigator.pop(context);
+  }
+
+  void _removeTransaction(String idTx) {
+    setState(
+      () {
+        _transaction.removeWhere((transaction) => transaction.id == idTx);
+      },
+    );
   }
 
   void _showModalAddTransaction(BuildContext ctx) {
@@ -112,7 +120,10 @@ class _MyHomePageState extends State<MyHomePage> {
           child: Column(
             children: [
               Chart(recentTransactions: _recentTransactions),
-              TransactionList(transaction: _transaction)
+              TransactionList(
+                transaction: _transaction,
+                removeTransaction: _removeTransaction,
+              )
             ],
           ),
         ),
@@ -120,6 +131,7 @@ class _MyHomePageState extends State<MyHomePage> {
           child: const Icon(Icons.add),
           onPressed: () => _showModalAddTransaction(context),
         ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       ),
     );
   }

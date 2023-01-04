@@ -28,7 +28,7 @@ class Chart extends StatelessWidget {
           'amount': sumTransactionToday,
         };
       },
-    );
+    ).reversed.toList();
   }
 
   double get totalSpends {
@@ -41,10 +41,13 @@ class Chart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      elevation: 6,
-      margin: const EdgeInsets.all(20),
+      elevation: 4,
+      margin: const EdgeInsets.all(10),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+      ),
       child: Padding(
-        padding: const EdgeInsets.all(10),
+        padding: const EdgeInsets.all(16),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: groupedTransactionValues.map((data) {
