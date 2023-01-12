@@ -104,6 +104,53 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
+  List<Widget> _buildLandscapeContent(
+    MediaQueryData deviceSize,
+    AppBar appBar2,
+    Widget txList,
+  ) {
+    return [
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Text('Show Chart'),
+          Switch(
+              value: _showChart,
+              onChanged: (val) {
+                setState(() {
+                  _showChart = !_showChart;
+                });
+              }),
+        ],
+      ),
+      _showChart
+          ? Container(
+              height: (deviceSize.size.height -
+                      appBar2.preferredSize.height -
+                      deviceSize.padding.top) *
+                  0.7,
+              child: Chart(recentTransactions: _recentTransactions))
+          : txList,
+    ];
+  }
+
+  List<Widget> _buildHorizontalContent(
+    MediaQueryData deviceSize,
+    AppBar appBar2,
+    Widget txList,
+  ) {
+    return [
+      Container(
+        height: (deviceSize.size.height -
+                appBar2.preferredSize.height -
+                deviceSize.padding.top) *
+            0.3,
+        child: Chart(recentTransactions: _recentTransactions),
+      ),
+      txList
+    ];
+  }
+
   @override
   Widget build(BuildContext context) {
     final deviceSize = MediaQuery.of(context);
@@ -135,36 +182,17 @@ class _MyHomePageState extends State<MyHomePage> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               if (isLandscape)
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text('Show Chart'),
-                    Switch(
-                        value: _showChart,
-                        onChanged: (val) {
-                          setState(() {
-                            _showChart = !_showChart;
-                          });
-                        }),
-                  ],
+                ..._buildLandscapeContent(
+                  deviceSize,
+                  appBar2,
+                  txList,
                 ),
-              if (isLandscape)
-                _showChart
-                    ? Container(
-                        height: (deviceSize.size.height -
-                                appBar2.preferredSize.height -
-                                deviceSize.padding.top) *
-                            0.7,
-                        child: Chart(recentTransactions: _recentTransactions))
-                    : txList,
               if (!isLandscape)
-                Container(
-                    height: (deviceSize.size.height -
-                            appBar2.preferredSize.height -
-                            deviceSize.padding.top) *
-                        0.3,
-                    child: Chart(recentTransactions: _recentTransactions)),
-              if (!isLandscape) txList,
+                ..._buildHorizontalContent(
+                  deviceSize,
+                  appBar2,
+                  txList,
+                ),
             ],
           ),
         ),
